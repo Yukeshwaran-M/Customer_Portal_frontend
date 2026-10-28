@@ -1,0 +1,106 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <fieldset [disabled]="saving">
+    <legend class="visually-hidden">Customer details</legend>
+    <div class="row g-3">
+      <div class="col-12">
+        <label for="fullName" class="form-label">Full name <span class="text-danger" aria-hidden="true">*</span></label>
+        <input
+          id="fullName"
+          type="text"
+          class="form-control"
+          formControlName="fullName"
+          autocomplete="off"
+          aria-required="true"
+          aria-describedby="fullName-error"
+          [class.is-invalid]="errorMessage('fullName')"
+          [attr.aria-invalid]="errorMessage('fullName') ? 'true' : null"
+        />
+        <div id="fullName-error" class="invalid-feedback" *ngIf="errorMessage('fullName') as message">{{ message }}</div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label for="email" class="form-label">Email <span class="text-danger" aria-hidden="true">*</span></label>
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          autocomplete="off"
+          aria-required="true"
+          aria-describedby="email-error email-hint"
+          [class.is-invalid]="errorMessage('email')"
+          [attr.aria-invalid]="errorMessage('email') ? 'true' : null"
+        />
+        <div id="email-error" class="invalid-feedback" *ngIf="errorMessage('email') as message">{{ message }}</div>
+        <div id="email-hint" class="form-text" *ngIf="form.controls.email.pending" role="status">Checking email…</div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label for="phone" class="form-label">Phone <span class="text-danger" aria-hidden="true">*</span></label>
+        <input
+          id="phone"
+          type="tel"
+          inputmode="numeric"
+          maxlength="10"
+          class="form-control"
+          formControlName="phone"
+          autocomplete="off"
+          aria-required="true"
+          aria-describedby="phone-error"
+          [class.is-invalid]="errorMessage('phone')"
+          [attr.aria-invalid]="errorMessage('phone') ? 'true' : null"
+        />
+        <div id="phone-error" class="invalid-feedback" *ngIf="errorMessage('phone') as message">{{ message }}</div>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <label for="city" class="form-label">City <span class="text-danger" aria-hidden="true">*</span></label>
+        <input
+          id="city"
+          type="text"
+          class="form-control"
+          formControlName="city"
+          list="city-options"
+          autocomplete="off"
+          aria-required="true"
+          aria-describedby="city-error"
+          [class.is-invalid]="errorMessage('city')"
+          [attr.aria-invalid]="errorMessage('city') ? 'true' : null"
+        />
+        <datalist id="city-options">
+          <option *ngFor="let city of cities" [value]="city"></option>
+        </datalist>
+        <div id="city-error" class="invalid-feedback" *ngIf="errorMessage('city') as message">{{ message }}</div>
+      </div>
+
+      <div class="col-6 col-md-4">
+        <label for="status" class="form-label">Status</label>
+        <select id="status" class="form-select" formControlName="status">
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+
+      <div class="col-6 col-md-4">
+        <label for="riskLevel" class="form-label">Risk level</label>
+        <select id="riskLevel" class="form-select" formControlName="riskLevel">
+          <option *ngFor="let level of riskLevels" [value]="level">{{ level }}</option>
+        </select>
+      </div>
+
+      <div class="col-12">
+        <div class="form-check">
+          <input id="reviewRequired" type="checkbox" class="form-check-input" formControlName="reviewRequired" />
+          <label for="reviewRequired" class="form-check-label">Review required</label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="d-flex flex-wrap gap-2 justify-content-end mt-4">
+    <button type="button" class="btn btn-outline-secondary" (click)="cancel.emit()">Cancel</button>
+    <button type="submit" class="btn btn-primary" data-test="submit" [disabled]="isSubmitDisabled">
+      <span *ngIf="saving" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+      {{ saving ? 'Saving…' : customer ? 'Save changes' : 'Add customer' }}
+    </button>
+  </div>
+</form>

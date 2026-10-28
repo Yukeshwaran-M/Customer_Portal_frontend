@@ -1,0 +1,50 @@
+<div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <caption class="visually-hidden">Customers</caption>
+    <thead class="table-light">
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col" class="d-none d-md-table-cell">Email</th>
+        <th scope="col" class="d-none d-lg-table-cell">Phone</th>
+        <th scope="col" class="d-none d-md-table-cell">City</th>
+        <th scope="col">Status</th>
+        <th scope="col" class="d-none d-lg-table-cell">Last updated</th>
+        <th scope="col" class="text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let customer of customers; trackBy: trackById">
+        <td>
+          <a [routerLink]="['/customers', customer.id]" class="fw-semibold text-decoration-none">{{ customer.fullName }}</a>
+          <span *ngIf="customer.reviewRequired" class="badge text-bg-warning ms-2">Review</span>
+          <div class="small text-muted">{{ customer.id }}</div>
+          <!-- compact details for small screens -->
+          <div class="small text-muted d-md-none">{{ customer.email }} · {{ customer.city }}</div>
+        </td>
+        <td class="d-none d-md-table-cell">{{ customer.email }}</td>
+        <td class="d-none d-lg-table-cell">{{ customer.phone }}</td>
+        <td class="d-none d-md-table-cell">{{ customer.city }}</td>
+        <td><span class="badge" [ngClass]="badgeClass(customer.status)">{{ customer.status }}</span></td>
+        <td class="d-none d-lg-table-cell">{{ customer.updatedAt | date: 'dd MMM yyyy, HH:mm' }}</td>
+        <td>
+          <div class="d-flex flex-wrap gap-1 justify-content-end">
+            <a class="btn btn-sm btn-outline-primary" [routerLink]="['/customers', customer.id]" [attr.aria-label]="'View ' + customer.fullName">View</a>
+            <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/customers', customer.id, 'edit']" [attr.aria-label]="'Edit ' + customer.fullName">Edit</a>
+            <button
+              type="button"
+              class="btn btn-sm"
+              data-test="toggle-status"
+              [ngClass]="customer.status === 'Active' ? 'btn-outline-danger' : 'btn-outline-success'"
+              [disabled]="isBusy(customer.id)"
+              [attr.aria-label]="toggleLabel(customer) + ' ' + customer.fullName"
+              (click)="toggleStatus.emit(customer)"
+            >
+              <span *ngIf="isBusy(customer.id)" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+              {{ toggleLabel(customer) }}
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

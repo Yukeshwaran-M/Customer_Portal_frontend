@@ -1,0 +1,71 @@
+<ng-container *ngIf="{ vm: vm$ | async, busyIds: busyIds$ | async } as view">
+  <a routerLink="/customers" class="btn btn-link px-0 mb-2">← Back to customers</a>
+
+  <ng-container *ngIf="view.vm as vm">
+    <div *ngIf="vm.state === 'loading'" class="text-center py-5" role="status">
+      <div class="spinner-border text-primary" aria-hidden="true"></div>
+      <p class="mt-3 mb-0">Loading customer…</p>
+    </div>
+
+    <div *ngIf="vm.state === 'error'" class="alert alert-danger d-flex flex-wrap justify-content-between align-items-center gap-2" role="alert">
+      <span>{{ vm.message }}</span>
+      <button type="button" class="btn btn-sm btn-outline-danger" (click)="reload()">Try again</button>
+    </div>
+
+    <div *ngIf="vm.state === 'ready'" class="card shadow-sm">
+      <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <h1 class="h4 mb-0">
+          {{ vm.customer.fullName }}
+          <span class="badge ms-2" [ngClass]="vm.customer.status === 'Active' ? 'text-bg-success' : 'text-bg-secondary'">
+            {{ vm.customer.status }}
+          </span>
+        </h1>
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-secondary btn-sm" [routerLink]="['/customers', vm.customer.id, 'edit']">Edit</a>
+          <button
+            type="button"
+            class="btn btn-sm"
+            data-test="toggle-status"
+            [ngClass]="vm.customer.status === 'Active' ? 'btn-outline-danger' : 'btn-outline-success'"
+            [disabled]="isBusy(view.busyIds, vm.customer.id)"
+            (click)="onToggleStatus(vm.customer)"
+          >
+            <span *ngIf="isBusy(view.busyIds, vm.customer.id)" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+            {{ toggleLabel(vm.customer) }}
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-4 col-lg-3">Customer ID</dt>
+          <dd class="col-sm-8 col-lg-9">{{ vm.customer.id }}</dd>
+
+          <dt class="col-sm-4 col-lg-3">Email</dt>
+          <dd class="col-sm-8 col-lg-9">{{ vm.customer.email }}</dd>
+
+          <dt class="col-sm-4 col-lg-3">Phone</dt>
+          <dd class="col-sm-8 col-lg-9">{{ vm.customer.phone }}</dd>
+
+          <dt class="col-sm-4 col-lg-3">City</dt>
+          <dd class="col-sm-8 col-lg-9">{{ vm.customer.city }}</dd>
+
+          <dt class="col-sm-4 col-lg-3">Status</dt>
+          <dd class="col-sm-8 col-lg-9">{{ vm.customer.status }}</dd>
+
+          <dt class="col-sm-4 col-lg-3">Risk level</dt>
+          <dd class="col-sm-8 col-lg-9"><span class="badge" [ngClass]="riskClass(vm.customer.riskLevel)">{{ vm.customer.riskLevel }}</span></dd>
+
+          <dt class="col-sm-4 col-lg-3">Review required</dt>
+          <dd class="col-sm-8 col-lg-9">{{ vm.customer.reviewRequired ? 'Yes' : 'No' }}</dd>
+
+          <dt class="col-sm-4 col-lg-3">Created</dt>
+          <dd class="col-sm-8 col-lg-9">{{ vm.customer.createdAt | date: 'medium' }}</dd>
+
+          <dt class="col-sm-4 col-lg-3">Last updated</dt>
+          <dd class="col-sm-8 col-lg-9 mb-0">{{ vm.customer.updatedAt | date: 'medium' }}</dd>
+        </dl>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,36 @@
+<ng-container *ngIf="request$ | async as request">
+  <div class="modal-backdrop fade show"></div>
+  <div
+    class="modal fade show d-block"
+    tabindex="-1"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="confirm-title"
+    aria-describedby="confirm-message"
+    (click)="onBackdropClick($event, request)"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="confirm-title">{{ request.options.title }}</h2>
+        </div>
+        <div class="modal-body" id="confirm-message">{{ request.options.message }}</div>
+        <div class="modal-footer">
+          <button #cancelButton type="button" class="btn btn-outline-secondary" data-test="cancel" (click)="request.respond(false)">
+            {{ request.options.cancelText ?? 'Cancel' }}
+          </button>
+          <button
+            type="button"
+            class="btn"
+            data-test="confirm"
+            [class.btn-danger]="request.options.danger"
+            [class.btn-primary]="!request.options.danger"
+            (click)="request.respond(true)"
+          >
+            {{ request.options.confirmText ?? 'Confirm' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

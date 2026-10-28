@@ -1,0 +1,41 @@
+<form [formGroup]="form" class="row g-3 align-items-end" role="search" aria-label="Customer filters">
+  <div class="col-12 col-md-6 col-lg-4">
+    <label for="customer-search" class="form-label">Search</label>
+    <input
+      id="customer-search"
+      type="search"
+      class="form-control"
+      formControlName="search"
+      placeholder="Name, email or customer ID"
+      autocomplete="off"
+    />
+  </div>
+
+  <div class="col-6 col-md-3 col-lg-2">
+    <label for="status-filter" class="form-label">Status</label>
+    <select id="status-filter" class="form-select" formControlName="status">
+      <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+    </select>
+  </div>
+
+  <div class="col-6 col-md-3 col-lg-2">
+    <label for="city-filter" class="form-label">City</label>
+    <select id="city-filter" class="form-select" formControlName="city">
+      <option [value]="all">All cities</option>
+      <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+    </select>
+  </div>
+
+  <div class="col-12 col-md-6 col-lg-3">
+    <label for="sort-by" class="form-label">Sort by</label>
+    <select id="sort-by" class="form-select" formControlName="sort">
+      <option *ngFor="let option of sortOptions" [value]="option.key">{{ option.label }}</option>
+    </select>
+  </div>
+
+  <div class="col-12 col-lg-1 d-grid">
+    <button type="button" class="btn btn-outline-secondary" [disabled]="!canClear" (click)="filtersCleared.emit()">
+      Clear
+    </button>
+  </div>
+</form>

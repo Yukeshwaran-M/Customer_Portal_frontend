@@ -1,0 +1,14 @@
+<div class="toast-container position-fixed bottom-0 end-0 p-3" aria-live="polite">
+  <div
+    *ngFor="let toast of toasts$ | async; trackBy: trackById"
+    class="toast show align-items-center border-0"
+    [class.text-bg-success]="toast.type === 'success'"
+    [class.text-bg-danger]="toast.type === 'danger'"
+    [attr.role]="toast.type === 'danger' ? 'alert' : 'status'"
+  >
+    <div class="d-flex">
+      <div class="toast-body">{{ toast.message }}</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close notification" (click)="dismiss(toast.id)"></button>
+    </div>
+  </div>
+</div>
